@@ -22,12 +22,13 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 
 # FLASK-LOGIN FUNCTION
+from src.models import *
 
-"""
+
 @login_manager.user_loader
 def load_user(user_id):
     return Users.query.get(int(user_id))
-"""
+
 
 @login_manager.unauthorized_handler
 def unauthorized():
