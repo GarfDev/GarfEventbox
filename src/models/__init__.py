@@ -7,13 +7,13 @@ class Users(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(255), nullable=False, unique=True)
+    email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
     birthday = db.Column(db.Integer, nullable=True)
     address = db.Column(db.Integer, nullable=True)
-    phone_number = db.Column(db.Integer, nullable=False)
-    email = db.Column(db.String(255), nullable=False, unique=True)
+    phone_number = db.Column(db.Integer, nullable=True)
     avatar = db.Column(db.String(255), nullable=True)
     role = db.Column(db.String(60), default="USER")
     organize = db.Column(db.String(100), nullable=True)
@@ -70,7 +70,7 @@ class Tickets(db.Model):
     price = db.Column(db.Integer, nullable=False)
     # RELATIONSHIP_COLUMNS
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
-    order_id = db.relationship("Order_Item", backref='ticket', lazy=True)
+    order_items_id = db.relationship("Order_Item", backref='ticket', lazy=True)
 
 
 class Order_History(db.Model):
@@ -89,7 +89,7 @@ class Order_Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     # RELATIONSHIP_COLUMNS
     order_id = db.Column(db.Integer, db.ForeignKey('order_history.id'))
-    ticket_id = db.Column(db.Integer, db.ForeignKey('Tickets.id'))
+    ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'))
     status = db.Column(db.String(15), default="NOT-USED")
 
 
@@ -101,3 +101,5 @@ class Rating_Hitory(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     desc = db.Column(db.String, nullable=False)
+
+db.create_all()
