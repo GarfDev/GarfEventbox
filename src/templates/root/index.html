@@ -17,9 +17,10 @@
 }
 
 body {
+
   margin: 0;
   min-height: 100vh;
-  font-family: 'Open Sans';
+  font-family: 'Roboto', sans-serif;
   background: #fafafa;
 }
 
@@ -204,50 +205,20 @@ a {
 {% endblock %}
 
 {% block body %}
-    <section class="info">
-      <img src="https://codetheweb.blog/assets/img/icon2.png">
-      <h1>Learn HTML &mdash; <a href="https://codetheweb.blog/" target="_blank">Code The Web</a></h1>
-    </section>
-    <section class="cards-wrapper">
-      <div class="card-grid-space">
-        <div class="num">01</div>
-        <a class="card" href="https://codetheweb.blog/2017/10/06/html-syntax/" style="--bg-img: url(https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&resize_w=1500&url=https://codetheweb.blog/assets/img/posts/html-syntax/cover.jpg)">
-          <div>
-            <h1>HTML Syntax</h1>
-            <p>The syntax of a language is how it works. How to actually write it. Learn HTML syntax…</p>
-            <div class="date">6 Oct 2017</div>
+    <section class="cards-wrapper d-flex justify-content-around flex-wrap w-100">
+      {% for event in events %}
+      <div class="card-grid-space m-4">
+        <a class="card" href={{ url_for('event.event', id=event.id) }} style="--bg-img: url({{ event.feature_pic }}); background-size: cover;background-repeat: no-repeat;background-position: center;">
+          <div style="margin-top: 45%;">
+            <h1 style="font-family: 'Roboto', sans-serif;">{{ event.title }}</h1>
+            <p>{{ event.short_desc }}</p>
+            <div class="date">{{ time.strftime("%D", time.localtime(event.start_time)) }}</div>
             <div class="tags">
-              <div class="tag">HTML</div>
+              <div class="tag">{{ event.category[0].title }}</div>
             </div>
           </div>
         </a>
       </div>
-      <div class="card-grid-space">
-        <div class="num">02</div>
-        <a class="card" href="https://codetheweb.blog/2017/10/09/basic-types-of-html-tags/" style="--bg-img: url('https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&resize_w=1500&url=https://codetheweb.blog/assets/img/posts/basic-types-of-html-tags/cover.jpg')">
-          <div>
-            <h1>Basic types of HTML tags</h1>
-            <p>Learn about some of the most common HTML tags…</p>
-            <div class="date">9 Oct 2017</div>
-            <div class="tags">
-              <div class="tag">HTML</div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="card-grid-space">
-        <div class="num">03</div>
-        <a class="card" href="https://codetheweb.blog/2017/10/14/links-images-about-file-paths/" style="--bg-img: url('https://images1-focus-opensocial.googleusercontent.com/gadgets/proxy?container=focus&resize_w=1500&url=https://codetheweb.blog/assets/img/posts/links-images-about-file-paths/cover.jpg')">
-          <div>
-            <h1>Links, images and about file paths</h1>
-            <p>Learn how to use links and images along with file paths…</p>
-            <div class="date">14 Oct 2017</div>
-            <div class="tags">
-              <div class="tag">HTML</div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <!-- https://images.unsplash.com/photo-1520839090488-4a6c211e2f94?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=38951b8650067840307cba514b554ba5&auto=format&fit=crop&w=1350&q=80 -->
+      {% endfor %}
     </section>
 {% endblock %}

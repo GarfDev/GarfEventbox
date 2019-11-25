@@ -1,0 +1,125 @@
+{% extends 'layout.html' %}
+
+{% block style %}
+
+	.ticket-toggle{
+		border: 2px solid black;
+		width: 86vw;
+		height: 40px;
+	}
+
+	.ticket-toggle:hover{
+		border: 2px solid black;
+		background-color: none !important;
+	}
+
+	.ticket-body{
+		width: 86vw;
+		margin-left: 0px;
+		border-left: 2px solid black;
+		border-right: 2px solid black;
+		border-bottom: 2px solid black;
+		border-radius: 1px;
+		border-spacing: 0;
+		margin-top: -2px;
+	}
+
+	.ticket-number{
+		width: 60%;
+		height: 40px;
+		padding: 5px;
+	}
+
+	.add-new-button-toggle {
+		position: fixed;
+		bottom: 15px;
+		right: 15px;
+		border: 2px solid black;
+		width: 15vw;
+		padding: 5px;
+
+	}
+
+
+	.submit-button {
+		border: 2px solid black;
+		width: 10vw;
+		padding: 5px;
+	}
+
+	.create-new-modal{
+		border: 4px solid black;
+	}
+
+	.modal-input {
+		border: 2px solid black;
+		margin: 5px;
+		padding: 7px;
+	}
+
+	.header {
+		border: 4px solid black;
+		font-weight: bold;
+	}
+
+{% endblock %}
+
+
+{% block body %}
+
+	<div class="container-fluid d-flex flex-column justify-content-center align-items-center">
+		<button type="button" class="add-new-button-toggle" data-toggle="modal" data-target="#exampleModal">
+		  Add New Ticket
+		</button>
+		<div class="row p-2 pr-4 pl-4 m-3 header">
+			In here you can add and edit your tickets
+		</div>
+        {% for ticket in event.tickets %}
+		<div class="ticket m-2 p-2">
+			<button class="btn btn-light dropdown-toggle ticket-toggle"
+			type="button"
+			id="about-us"
+			data-toggle="collapse"
+			data-target="#collapseExample"
+			aria-controls="collapseExample">
+				#{{ ticket.tier }} | {{ ticket.title }} | {{ ticket.price }} VNĐ
+			</button>
+			<div class="collapse row d-flex ticket-body" id="collapseExample">
+			  <div class="col-11 border border-dark p-2">
+			    {{ ticket.desc }}
+			  </div>
+			  <div class="col-1 border border-dark p-2">
+			  	<input class="ticket-number" type="number" placeholder="Number" value="0">
+			  	<input hidden type="text" name="ticket-type" value="asdasdasd">
+			  </div>
+			</div>
+		</div>
+        {% endfor %}
+	</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog border" role="document">
+
+    <form class="modal-content create-new-modal" method="POST">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex flex-column justify-content-around">
+        <input class="modal-input" type="text" name="title" placeholder="Ticket title..">
+        <input class="modal-input" type="number" name="tier" placeholder="Ticket tier..">
+        <input class="modal-input" type="number" name="price" placeholder="Ticket price..">
+        <textarea class="modal-input" name="desc" rows="3" placeholder="Ticket desc.."></textarea>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="submit-button">Save changes</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+
+{% endblock %}

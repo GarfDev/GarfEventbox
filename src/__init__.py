@@ -9,6 +9,8 @@ from flask_script import Manager
 from dotenv import load_dotenv
 from mailjet_rest import Client
 from itsdangerous import URLSafeTimedSerializer
+from flaskext.markdown import Markdown
+
 from os import environ
 
 # DEFAULT_ENVIROMENT_SETUP
@@ -25,6 +27,7 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 mailjet = Client(auth=("50f3b8b277f66b351cebb7c02e24018c", "8b59e5911a2fa8eb0363e00d9f9e2458"), version='v3.1')
 encoder = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+Markdown(app)
 
 # FLASK-LOGIN FUNCTION
 from src.models import *
@@ -46,3 +49,6 @@ def unauthorized():
 
 from src.components.root import root_blueprint
 app.register_blueprint(root_blueprint, url_prefix="/")
+
+from src.components.event import event_blueprint
+app.register_blueprint(event_blueprint, url_prefix="/event")

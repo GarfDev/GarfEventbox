@@ -1,0 +1,189 @@
+
+{% extends 'layout.html' %}
+{% include '/components/navbar.html' %}
+
+{% block title %}GarfEventbox - Buy Event ticket online fast and safe {% endblock %}
+
+{% block style %}
+body {
+  background-color: #f45b69;
+  font-family: "Asap", sans-serif;
+}
+
+input:focus {
+    outline: none;
+}
+
+
+.login {
+  overflow: hidden;
+  background-color: white;
+  padding: 40px 30px 30px 30px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  -webkit-transition: -webkit-transform 300ms, box-shadow 300ms;
+  -moz-transition: -moz-transform 300ms, box-shadow 300ms;
+  transition: transform 300ms, box-shadow 300ms;
+  box-shadow: 5px 10px 10px rgba(2, 128, 144, 0.2);
+}
+.login::before, .login::after {
+  content: '';
+  position: absolute;
+  width: 800px;
+  height: 800px;
+  border-top-left-radius: 40%;
+  border-top-right-radius: 45%;
+  border-bottom-left-radius: 35%;
+  border-bottom-right-radius: 40%;
+  z-index: -1;
+}
+.login::before {
+  left: 40%;
+  background-color: rgba(69, 105, 144, 0.15);
+  -webkit-animation: wawes 6s infinite linear;
+  -moz-animation: wawes 6s infinite linear;
+  animation: wawes 6s infinite linear;
+}
+.login::after {
+  left: 35%;
+  background-color: rgba(2, 128, 144, 0.2);
+  -webkit-animation: wawes 7s infinite;
+  -moz-animation: wawes 7s infinite;
+  animation: wawes 7s infinite;
+}
+input {
+    border: 1px solid lightgrey;
+    font-family: "Asap", sans-serif;
+    display: block;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    width: 100%;
+    padding: 10px 10px;
+    margin: 15px -10px;
+}
+
+.input {
+    border: 1px solid lightgrey;
+    font-family: "Asap", sans-serif;
+    display: block;
+    border-radius: 5px;
+    font-size: 16px;
+    background: white;
+    width: 100%;
+    padding: 10px 10px;
+    margin: 15px -10px;
+}
+
+button {
+  font-family: "Asap", sans-serif;
+  cursor: pointer;
+  color: #fff;
+  font-size: 16px;
+  text-transform: uppercase;
+  border: 0;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: -5px;
+  border-radius: 5px;
+  background-color: #f45b69;
+  -webkit-transition: background-color 300ms;
+  -moz-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+.login > button:hover {
+  background-color: #f24353;
+}
+
+@-webkit-keyframes wawes {
+  from {
+    -webkit-transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-moz-keyframes wawes {
+  from {
+    -moz-transform: rotate(0);
+  }
+  to {
+    -moz-transform: rotate(360deg);
+  }
+}
+@keyframes wawes {
+  from {
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -ms-transform: rotate(0);
+    -o-transform: rotate(0);
+    transform: rotate(0);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+}
+
+.table-condensed {
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+}
+
+{% endblock %}
+
+
+{% block body %}
+<div style="background:red;" class="container-fluid">
+    <form class="login d-flex flex-column" id="create" method="POST" enctype="multipart/form-data">
+        <input name="title" type="text" placeholder="Event title..">
+        <input name="start_time" id="startdatepicker" width="355" placeholder="When your event start..">
+        <input name="end_time" id="enddatepicker" width="355" placeholder="When your event end..">
+        <input name="address" placeholder="Where is your event..">
+        <select id="wine" name="event_type" style="padding: 10px; margin-top:10px; margin-bottom: 10px; margin-left: -8px;width: 340px;">
+            <option value="1">Live music</option>
+            <option value="2">Culture</option>
+            <option value="3">Outdoor</option>
+            <option value="4">Conference</option>
+            <option value="5">Seminar/Courses</option>
+            <option value="6">Exhibitions</option>
+            <option value="7">Meetups</option>
+            <option value="8">Sports</option>
+            <option value="9">Community</option>
+            <option value="10">Attractions</option>
+        </select>
+        <textarea name="short_desc" rows="5" style="margin-left: -8px; padding: 10px; width: 340px;" placeholder="Tell something about your event, shortly.."></textarea>
+        <input name="feature_pic" placeholder="A nice picture of your event..">
+        <button type="submit" value="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+$('#startdatepicker').datepicker({
+    uiLibrary: 'bootstrap4'
+});
+$('#enddatepicker').datepicker({
+    uiLibrary: 'bootstrap4'
+});
+{% endblock %}

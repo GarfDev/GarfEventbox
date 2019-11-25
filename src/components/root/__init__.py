@@ -1,15 +1,18 @@
 from flask import Blueprint, request, url_for, render_template, redirect, flash
 from flask_login import current_user, login_required, login_user, logout_user
-from src.models import Users
+from src.models import Users, Events, Order_History
 from src import db, mailjet, app, encoder
-import time
+import time, re
 from itsdangerous import SignatureExpired
+
 root_blueprint = Blueprint('root', __name__
                            , template_folder="../../templates")
 
+
 @root_blueprint.route('/', methods=["GET"])
 def home():
-    return render_template("/root/index.html")
+    events = Events.query.all()
+    return render_template("/root/index.html", events=events, time=time)
 
 
 @root_blueprint.route('/login', methods=["POST", "GET"])
@@ -19,7 +22,28 @@ def login():
             return redirect("/")
         return render_template("/root/login.html")
     if request.method == "POST":
-        pass
+        try:
+            if re.search("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", request.form['username']):
+                user = Users.query.filter_by(email=request.form['username']).first()
+            else:
+                user = Users.query.filter_by(username=request.form['username']).first()
+            if not user:
+                flash("Your username of password is wrong, please try again!")
+                return render_template("root/login.html")
+            if not user.email_verified:
+                flash("Please verify your acccount before try to loggin")
+                return render_template("root/login.html")
+            if not user.check_password(request.form['password']):
+                flash("Your username of password is wrong, please try again!")
+                return render_template("root/login.html")
+            if user.check_password(request.form['password']):
+                login_user(user)
+                flash("Login successful!")
+                return redirect("/")
+        except Exception as Error:
+            print(Error)
+            flash("Error while log you in our server, please try again later.")
+            return render_template("root/login.html")
 
 
 @root_blueprint.route('/register', methods=["POST", "GET"])
@@ -35,11 +59,11 @@ def register():
                 username=request.form['username'],
                 first_name=request.form['first_name'],
                 last_name=request.form['last_name'],
-                password=request.form['password'],
                 email=request.form['email'],
-                created_at = int(time.time()),
-                updated_at = int(time.time())
+                created_at=int(time.time()),
+                updated_at=int(time.time())
             )
+            new_user.set_password(request.form['password'])
             db.session.add(new_user)
             print(str(encoder.dumps(new_user.email, salt="email-verify")))
             verify_token = str(encoder.dumps(new_user.email, salt="email-verify"))
@@ -305,16 +329,17 @@ def register():
             respone = mailjet.send.create(data=data)
             print(respone)
             print("email sent to ", new_user.email)
-
+            db.session.commit()
+            new_user.id
         except Exception as Error:
             print(Error)
             flash("Error on creating your email, please check your information again.")
             return render_template("/root/register.html")
         else:
-            db.session.commit()
             flash("Successful created your account, please verify your account \
                    with the key we sent to you though email.")
             return redirect("/login")
+
 
 @root_blueprint.route('/forgot', methods=["GET", "POST"])
 def forgot():
@@ -331,11 +356,11 @@ def verify(token=None):
             flash("Access denied!")
             return redirect("/")
         try:
-            encoder.loads(token, salt='email-verify', max_age=60*60*24)
+            encoder.loads(token, salt='email-verify', max_age=60 * 60 * 24)
         except SignatureExpired:
             decoded_email = encoder.loads(token, salt='email-verify')
             verify_token = str(encoder.dumps(decoded_email, salt="email-verify"))
-            user = Users.query.filter_by(email = decoded_email).first()
+            user = Users.query.filter_by(email=decoded_email).first()
             html = """
             <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
             <html xmlns="http://www.w3.org/1999/xhtml">
@@ -599,11 +624,16 @@ def verify(token=None):
             return redirect("/")
         except:
             flash("Error while progressing your token, please check your email and correct it!")
-            return redirect("/")
+            return render_template("/root/verifyfailed.html")
         else:
             decoded_email = encoder.loads(token, salt='email-verify')
             print("decoded_email", decoded_email)
             user = Users.query.filter_by(email=decoded_email).first()
             user.email_verified = True
+            new_order = Order_History(status="NOT COMPLETE",
+                                      created_at=int(time.time()),
+                                      updated_at=int(time.time()),
+                                      buyer_id=user.id)
+            db.session.add(new_order)
             db.session.commit()
             return render_template("/root/verify.html")
