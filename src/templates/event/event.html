@@ -74,6 +74,66 @@ article {
   padding: 1em;
 }
 
+.ticket-toggle{
+    border: 2px solid black;
+    width: 100%;
+    height: 40px;
+}
+
+.ticket-toggle:hover{
+    border: 2px solid black;
+    background-color: none !important;
+}
+
+.ticket-body{
+    width: 100%;
+    margin-left: 0px;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-bottom: 2px solid black;
+    border-radius: 1px;
+    border-spacing: 0;
+    margin-top: -2px;
+}
+
+.ticket-number{
+    width: 100%;
+    height: 40px;
+    padding: 5px;
+}
+
+.add-new-button-toggle {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    border: 2px solid black;
+    width: 15vw;
+    padding: 5px;
+
+}
+
+
+.submit-button {
+    border: 2px solid black;
+    width: 10vw;
+    padding: 5px;
+}
+
+.create-new-modal{
+    border: 4px solid black;
+}
+
+.modal-input {
+    border: 2px solid black;
+    margin: 5px;
+    padding: 7px;
+}
+
+.header {
+    border: 4px solid black;
+    font-weight: bold;
+}
+
 {% endblock %}
 
 
@@ -81,7 +141,6 @@ article {
 {% block body %}
 
 <div class="container-fluid">
-
     <section class="hero" style="background: url({{ event.feature_pic }}) center center no-repeat;">
       <header id="header">
         <nav>
@@ -93,12 +152,56 @@ article {
       </header>
       <footer class="hero-footer">
         <a class="button button-primary" href="#">{{ time.strftime("%D", time.localtime(event.start_time)) }}</a>
-        <a class="button" href="#">BUY TICKET</a>
+        <a class="button" href="#" data-toggle="modal" data-target="#exampleModal">BUY TICKET</a>
       </footer>
     </section>
     <article>
     {% filter markdown %}{{ event.desc }}{% endfilter %}
     </article>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog border" role="document">
+
+    <form class="modal-content create-new-modal" method="POST">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body d-flex flex-column justify-content-around">
+        {% for ticket in event.tickets %}
+		<div class="ticket m-2 p-2">
+			<button class="btn btn-light dropdown-toggle ticket-toggle"
+			type="button"
+			id="about-us"
+			data-toggle="collapse"
+			data-target="#{{ ticket.id }}"
+            aria-expanded="false"
+			aria-controls="{{ ticket.id }}">
+				#{{ ticket.tier }} | {{ ticket.title }} | {{ ticket.price }} VNĐ
+			</button>
+			<div class="collapse flex-nowrap ticket-body" id="{{ ticket.id }}">
+              <span class="d-flex">
+                <div class="border border-dark p-2" style="width: 80%;">
+                  {{ ticket.desc }}
+                </div>
+                <div class="border border-dark p-2" style="width: 20%;">
+                  <input class="ticket-number" name="{{ ticket.id }}" type="number" placeholder="Number" value="0">
+                </div>
+              </span>
+			</div>
+		</div>
+        {% endfor %}
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="submit-button">Save changes</button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
 
 {% endblock %}

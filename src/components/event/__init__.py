@@ -6,7 +6,8 @@ import time, re
 from itsdangerous import SignatureExpired
 
 event_blueprint = Blueprint('event', __name__
-                           , template_folder="../../templates")
+                            , template_folder="../../templates")
+
 
 @event_blueprint.route("/create", methods=['GET', 'POST'])
 @login_required
@@ -17,8 +18,10 @@ def create():
         print(request.form)
         try:
             new_event = Events(title=request.form['title'],
-                               start_time= time.mktime(datetime.strptime(request.form['start_time'], "%m/%d/%Y").timetuple()),
-                               end_time=time.mktime(datetime.strptime(request.form['end_time'], "%m/%d/%Y").timetuple()),
+                               start_time=time.mktime(
+                                   datetime.strptime(request.form['start_time'], "%m/%d/%Y").timetuple()),
+                               end_time=time.mktime(
+                                   datetime.strptime(request.form['end_time'], "%m/%d/%Y").timetuple()),
                                address=request.form['address'],
                                short_desc=request.form['short_desc'],
                                feature_pic=request.form['feature_pic'],
@@ -47,7 +50,11 @@ def event(id):
             return redirect("/event")
         return render_template("event/event.html", event=event, time=time)
     if request.method == "POST":
-        return render_template("event/event.html")
+        print(request.form)
+        for key, value in request.form:
+            print(f"{key} | {value}")
+        return redirect(f"/event/{id}")
+
 
 @event_blueprint.route("/<int:id>/editor", methods=['GET', 'POST'])
 @login_required
@@ -55,9 +62,10 @@ def edit(id):
     if request.method == "GET":
         event = Events.query.get(id)
         if not event:
-            flash("Cannot find this event in our database, please contact administrator if you believe this is an error")
+            flash(
+                "Cannot find this event in our database, please contact administrator if you believe this is an error")
             return redirect("/event")
-        return render_template("event/edit.html", desc = event.desc)
+        return render_template("event/edit.html", desc=event.desc)
     if request.method == "POST":
         try:
             event = Events.query.get(id)
@@ -68,6 +76,7 @@ def edit(id):
             print("Error from editor", Error)
             return redirect(f"/event/{id}/editor")
         return render_template("event/edit.html")
+
 
 @event_blueprint.route("/<int:id>/ticket-editor", methods=['GET', 'POST'])
 @login_required
@@ -92,4 +101,3 @@ def edit_ticket(id):
             return redirect(f"/event/{id}/ticket-editor")
         else:
             return redirect(f"/event/{id}/ticket-editor")
-
