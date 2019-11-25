@@ -259,12 +259,12 @@ def register():
                                   <tr>
                                     <td align="center">
                                       <div>
-                                        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="http://127.0.0.1:5000/verify/""" + verify_token + """" style="height:45px;v-text-anchor:middle;width:200px;" arcsize="7%" stroke="f" fill="t">
+                                        <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://garfticketbox.herokuapp.com/verify/""" + verify_token + """" style="height:45px;v-text-anchor:middle;width:200px;" arcsize="7%" stroke="f" fill="t">
                                         <v:fill type="tile" color="#414EF9" />
                                         <w:anchorlock/>
                                         <center style="color:#ffffff;font-family:sans-serif;font-size:15px;">Verify Email</center>
                                       </v:roundrect><![endif]-->
-                                        <a href="http://127.0.0.1:5000/verify/""" + verify_token + """" style="color:white;" class="button button--blue">Verify Email</a>
+                                        <a href="https://garfticketbox.herokuapp.com/verify/""" + verify_token + """" style="color:white;" class="button button--blue">Verify Email</a>
                                       </div>
                                     </td>
                                   </tr>
@@ -276,7 +276,7 @@ def register():
                                     <td>
                                       <p class="sub">If you’re having trouble clicking the button, copy and paste the URL below into your web browser.
                                       </p>
-                                      <p class="sub"><a href="http://127.0.0.1:5000/verify/""" + verify_token + """"</a></p>
+                                      <p class="sub"><a href="https://garfticketbox.herokuapp.com/verify/""" + verify_token + """"</a></p>
                                     </td>
                                   </tr>
                                 </table>

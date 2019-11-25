@@ -1,8 +1,11 @@
 from src import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.sql import func
+from src import qrgen
 from datetime import datetime
 import time
+
 
 class Users(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -42,7 +45,11 @@ class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     short_desc = db.Column(db.String(120), nullable=False)
-    desc = db.Column(db.String, default="# Welcome to Garfield Event Markdown Editor!\r\nHi! I'm your first Markdown file in **Garfield Event**. If you want to learn about markdown, you can [read here](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). That important cause we using markdown to layout your excellent event content!")
+    desc = db.Column(db.String, default="# Welcome to Garfield Event Markdown Editor!\r\nHi! I'm your first Markdown "
+                                        "file in **Garfield Event**. If you want to learn about markdown, "
+                                        "you can [read here]("
+                                        "https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet). That "
+                                        "important cause we using markdown to layout your excellent event content!")
     start_time = db.Column(db.Integer, nullable=False)
     end_time = db.Column(db.Integer, nullable=False)
     address = db.Column(db.String, nullable=False)
@@ -61,7 +68,7 @@ class Category(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), nullable=False)
-    events = db.relationship("Events", secondary="eventcategory", backref=db.backref('category'))
+
 
 class EventCategory(db.Model):
     __tablename__ = 'eventcategory'
@@ -93,6 +100,16 @@ class Order_History(db.Model):
     buyer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     order_items = db.relationship("Order_Item", backref='order', lazy=True)
 
+    def get_bill(self):
+        return Order_Item.query.join(Tickets).with_entities(
+            Tickets.id.label("id"), Tickets.title.label("name"),
+            Tickets.tier.label("tier"), Tickets.price.label("quality"),
+            Tickets.desc.label("desc"),
+            func.count(Tickets.id).label("quality"),
+            func.sum(Tickets.price).label("amount")
+            ).filter(Order_Item.order_id == self.id).group_by(
+            Tickets.id).all()
+
 
 class Order_Item(db.Model):
     __tablename__ = 'order_items'
@@ -103,14 +120,18 @@ class Order_Item(db.Model):
     ticket_id = db.Column(db.Integer, db.ForeignKey('tickets.id'))
     status = db.Column(db.String(15), default="NOT-USED")
 
+    def changestatus(self, content):
+        self.status = content
+
 
 class Rating_Hitory(db.Model):
     __tablename__ = 'rating_history'
     id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, nullable=False)
+    desc = db.Column(db.String, nullable=False)
     # RELATIONSHIP_COLUMN
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
-    desc = db.Column(db.String, nullable=False)
+
 
 db.create_all()

@@ -1,0 +1,104 @@
+{% extends 'layout.html' %}
+
+{% block style %}
+
+	.ticket-toggle{
+		border: 2px solid black;
+		width: 86vw;
+		height: 40px;
+	}
+
+	.ticket-toggle:hover{
+		border: 2px solid black;
+		background-color: none !important;
+	}
+
+	.ticket-body{
+		width: 86vw;
+		margin-left: 0px;
+		border-left: 2px solid black;
+		border-right: 2px solid black;
+		border-bottom: 2px solid black;
+		border-radius: 1px;
+		border-spacing: 0;
+		margin-top: -2px;
+	}
+
+	.ticket-number{
+		width: 60%;
+		height: 40px;
+		padding: 5px;
+	}
+
+	.add-new-button-toggle {
+		position: fixed;
+		bottom: 15px;
+		right: 15px;
+		border: 2px solid black;
+		width: 15vw;
+		padding: 5px;
+
+	}
+
+
+	.submit-button {
+		border: 2px solid black;
+		width: 10vw;
+		padding: 5px;
+	}
+
+	.create-new-modal{
+		border: 4px solid black;
+	}
+
+	.modal-input {
+		border: 2px solid black;
+		margin: 5px;
+		padding: 7px;
+	}
+
+	.header {
+		border: 4px solid black;
+		font-weight: bold;
+	}
+
+{% endblock %}
+
+
+{% block body %}
+
+	<form class="container-fluid d-flex flex-column justify-content-center align-items-center" method="POST" >
+		<button type="button" class="add-new-button-toggle" data-toggle="modal" data-target="#exampleModal">
+		  Add New Ticket
+		</button>
+		<div class="row p-2 pr-4 pl-4 m-3 header">
+			Modify Last Time before progress payment
+		</div>
+        {% for item in items %}
+		<div class="ticket m-2 p-2">
+			<button class="btn btn-light dropdown-toggle ticket-toggle"
+			type="button"
+			id="about-us"
+			data-toggle="collapse"
+			data-target="#collapseExample"
+			aria-controls="collapseExample">
+				#{{ item.tier }} | {{ item.name }} | {{ item.amount }} VNĐ
+			</button>
+			<div class="collapse row d-flex ticket-body" id="collapseExample">
+			  <div class="col-11 border border-dark p-2">
+			    {{ item.desc }}
+			  </div>
+			  <div class="col-1 border border-dark p-2">
+			  	<input name="{{ item.id }}" class="ticket-number" type="number" placeholder="Number" value="{{ item.quality }}">
+			  </div>
+			</div>
+		</div>
+        {% endfor %}
+		<div class="row d-flex justify-content-between">
+		<button type="submit" class="submit-button m-2">Save changes</button>
+		</div>
+	</form>
+
+
+
+{% endblock %}

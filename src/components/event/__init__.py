@@ -48,12 +48,28 @@ def event(id):
         if not event:
             flash("Sorry but this event not exist, please try again.")
             return redirect("/event")
-        return render_template("event/event.html", event=event, time=time)
+        return render_template("event/event.html", event=event, time=time, id=id)
     if request.method == "POST":
-        print(request.form)
-        for key, value in request.form:
-            print(f"{key} | {value}")
-        return redirect(f"/event/{id}")
+        try:
+            dict_to_buy = request.form.to_dict()
+            ticket_to_add = []
+            for key in dict_to_buy:
+                ticket = Tickets.query.get(key)
+                if int(dict_to_buy[key]) > ticket.number:
+                    flash("This ticket sold out:", ticket.title)
+                    return redirect(f"/event/{id}")
+                for ticket in range(int(dict_to_buy[key])):
+                    new_item = Order_Item(ticket_id=key,
+                                          order_id=current_user.order_history[-1].id)
+                    ticket_to_add.append(new_item)
+            db.session.add_all(ticket_to_add)
+        except Exception as Error:
+            print(Error)
+            flash("Some Error Happened, please try again.")
+            return redirect(f"/event/{id}")
+        else:
+            db.session.commit()
+            return redirect(f"/event/{id}")
 
 
 @event_blueprint.route("/<int:id>/editor", methods=['GET', 'POST'])
