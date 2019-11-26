@@ -280,9 +280,11 @@ a {
 
 {% block body %}
     <section class="cards-wrapper d-flex justify-content-around flex-wrap w-100">
+    {% if current_user.is_authenticated %}
     <div class="box" style="position: fixed; bottom: 25px; right: 10px;">
       <a href="/event/create" class="btn btn-white btn-animation-1">Create event</a>
     </div>
+    {% endif %}
       {% for event in events %}
       <div class="card-grid-space m-4">
         <a class="card" href={{ url_for('event.event', id=event.id) }} style="--bg-img: url({{ event.feature_pic }}); background-size: cover;background-repeat: no-repeat;background-position: center;">
