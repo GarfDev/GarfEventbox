@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 from mailjet_rest import Client
 from itsdangerous import URLSafeTimedSerializer
 from flaskext.markdown import Markdown
-import qrcode
 from os import environ
 
 # DEFAULT_ENVIROMENT_SETUP
@@ -28,13 +27,6 @@ manager.add_command('db', MigrateCommand)
 mailjet = Client(auth=("50f3b8b277f66b351cebb7c02e24018c", "8b59e5911a2fa8eb0363e00d9f9e2458"), version='v3.1')
 encoder = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 Markdown(app)
-qrgen = qrcode.QRCode(
-    version=1,
-    error_correction=qrcode.constants.ERROR_CORRECT_L,
-    box_size=400,
-    border=4,
-)
-
 # FLASK-LOGIN FUNCTION
 from src.models import *
 
