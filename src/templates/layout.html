@@ -16,8 +16,7 @@
     <div>
     {% block body %}{% endblock %}
     </div>
-<div id="open-modal" class="modal-window">
-  <div>
+  <div class="alert alert-primary fade" role="alert">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
@@ -26,7 +25,6 @@
         {% endif %}
     {% endwith %}
   </div>
-</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -35,5 +33,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.js"></script>
 <script>
     {% block script %}{% endblock %}
+</script>
+<script>
+    setTimeout(() => { $().alert('close') }, 3000)
 </script>
 </html>
