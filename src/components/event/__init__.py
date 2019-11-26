@@ -77,12 +77,18 @@ def event(id):
 def edit(id):
     if request.method == "GET":
         event = Events.query.get(id)
-        if not event:
+        if not event or event.host_id != current_user.id:
             flash(
-                "Cannot find this event in our database, please contact administrator if you believe this is an error")
+                "Cannot access, please contact administrator if you believe this is an error")
             return redirect("/event")
         return render_template("event/edit.html", desc=event.desc)
     if request.method == "POST":
+        event = Events.query.get(id)
+        if not event or event.host_id != current_user.id:
+            flash(
+                "Cannot access, please contact administrator if you believe this is an error")
+            return redirect("/event")
+
         try:
             event = Events.query.get(id)
             event.desc = request.form['markdown-desc']
