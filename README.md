@@ -1,8 +1,8 @@
 # CoderSchool FTW - * Fullstack Flask EventBox *
 
-Created with love by: `Hai Chung`
+Created with love by: `GarfDev`
   
-View online at: `https://h-ticketbox.herokuapp.com/`
+View online at: `https://garfticketbox.herokuapp.com/`
   
 One or two sentence summary of your project. 
 
